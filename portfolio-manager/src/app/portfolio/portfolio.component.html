@@ -1,0 +1,59 @@
+<div class="container">
+  <h2>Welcome to portfolio manager application</h2>
+  <div class="header">
+    <button class="add-entry-btn" mat-raised-button matLine color="primary" (click)="addEntry()">Add entry</button>
+    <mat-button-toggle-group>
+      <mat-button-toggle value="List" [checked]="viewEntriesOption" (change)="viewEntriesOption=true">List</mat-button-toggle>
+      <mat-button-toggle value="Grid" [checked]="!viewEntriesOption" (change)="viewEntriesOption=false">Grid</mat-button-toggle>
+    </mat-button-toggle-group>
+    <mat-form-field class="view-portfolio-select">
+      <mat-label>View portfolio</mat-label>
+      <mat-select [(ngModel)]="defaultViewEntries" name="viewPortfolioEntries" (selectionChange)="viewAllEntries($event.value)">
+        <mat-option [value]="viewEntries.All">All Entries</mat-option>
+        <mat-option [value]="viewEntries.Hidden">Hidden Entries</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <mat-card *ngIf="viewEntriesOption">
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item *ngFor="let entry of viewPortfolioEntries">
+          <div class="entry-from-list">
+            <p matLine>{{ entry.title }}</p>
+            <p matLine>{{ entry.description }}</p>
+            <p matLine><a [href]="entry.customerLink" [target]="entry.customerLink">Customer Link <mat-icon>launch</mat-icon></a></p>
+            <img class="image-from-list" [src]="entry.image"/>
+            <mat-checkbox color="primary" [checked]="entry.hidden" [(ngModel)]="entry.hidden" (change)="viewAllEntries(defaultViewEntries)">Hide Entry</mat-checkbox>
+            <button mat-raised-button matLine color="primary" (click)="updateEntry(entry)">Edit</button>
+            <button mat-raised-button matLine color="warn" (click)="deleteEntry(entry.id)">Delete</button>
+          </div>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card *ngIf="!viewEntriesOption">
+    <div class="entry-container">
+      <div *ngFor="let entry of viewPortfolioEntries">
+        <mat-card-header>
+          <mat-card-title>{{entry.title}}</mat-card-title>
+          <mat-card-subtitle>
+            <a [href]="entry.customerLink" [target]="entry.customerLink">{{entry.customerLink}}</a>
+        </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <span>
+            {{entry.description}}
+          </span>
+          <img mat-card-image [src]="entry.image">
+        </mat-card-content>
+        <mat-card-actions>
+          <mat-checkbox color="primary" [checked]="entry.hidden" [(ngModel)]="entry.hidden" (change)="viewAllEntries(defaultViewEntries)">Hide Entry</mat-checkbox>
+          <button mat-raised-button color="primary" (click)="updateEntry(entry)">Edit</button>
+          <button mat-raised-button color="warn" (click)="deleteEntry(entry.id)">Delete</button>
+        </mat-card-actions>
+      </div>
+    </div>
+  </mat-card>
+</div>

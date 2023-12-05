@@ -1,0 +1,31 @@
+button{
+    width: 120px;
+}
+
+.dialog-title{
+    text-align: center;
+}
+
+form{
+    display: grid;
+    margin: 20px 20px;
+    .image-input{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        button{
+            background-color: gray;
+        }
+        img{
+            width: 35%;
+            aspect-ratio: 3/2;
+            object-fit: contain;
+        }
+    }
+    .action-buttons{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+}

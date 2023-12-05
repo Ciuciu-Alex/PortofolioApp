@@ -1,0 +1,25 @@
+<h2 mat-dialog-title class="dialog-title">{{!data.entryToUpdate ? "Add entry" : "Edit entry"}}</h2>
+<form>
+    <mat-form-field appearance="fill">
+      <mat-label>Title</mat-label>
+      <input matInput [(ngModel)]="entry.title" required [ngModelOptions]="{standalone: true}"/>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Description</mat-label>
+      <input matInput [(ngModel)]="entry.description" required [ngModelOptions]="{standalone: true}"/>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Customer Link</mat-label>
+      <input matInput [(ngModel)]="entry.customerLink" required [ngModelOptions]="{standalone: true}"/>
+    </mat-form-field>
+    <div class="image-input">
+      <input type="file" (change)="onFileSelected($event)" #fileInput style="display: none" accept="image/*" />
+      <button mat-raised-button color="primary" (click)="fileInput.click()">Choose File</button>
+      <img *ngIf="entry.image!=''" [src]="entry.image" alt="Selected Image" class="selected-image" />
+    </div>
+      <mat-checkbox color="primary" [(ngModel)]="entry.hidden" [ngModelOptions]="{standalone: true}">Hide</mat-checkbox>    
+    <div class="action-buttons">
+      <button mat-raised-button matLine color="primary" (click)="saveEntry()">Save</button>
+      <button mat-raised-button matLine color="primary" (click)="dialogRef.close()">Cancel</button>
+    </div>
+  </form>
