@@ -1,0 +1,8 @@
+# Portfolio Manager
+To start the aplication run the next command:
+
+1. npm install -g @angular/cli
+2. npm i @angular/material
+  PowerShell Set-ExecutionPolicy -Scope CurrentUser-ExecutionPolicy RemoteSigned
+3. ng serve
+
