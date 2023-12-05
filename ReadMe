@@ -2,5 +2,5 @@
 To start the aplication run the next command:
 
 1. npm install
-3. ng serve
+2. ng serve
 
