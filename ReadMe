@@ -2,5 +2,5 @@
 To start the aplication run the next command:
 
 1. npm install
+After npm install, if you have errors, please close and open again the application using the code editor
 2. ng serve
-
