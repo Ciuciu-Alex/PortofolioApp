@@ -13,19 +13,19 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 
 import { PortfolioEntry, ViewEntries } from '../models/portfolio-entry.model';
-import { PortfolioService } from '../services/portfolio.service';
-import {AddPortfolioEntryComponent } from '../add-portfolio-entry/add-portfolio-entry.component';
+import { AddPortfolioEntryComponent } from '../add-portfolio-entry/add-portfolio-entry.component';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-portfolio',
   standalone: true,
-  imports: [CommonModule, FormsModule,MatIconModule, MatSelectModule, MatButtonModule, MatCheckboxModule, MatCardModule, MatInputModule,MatListModule,
-    MatGridListModule, MatButtonToggleModule, MatDialogModule],
+  imports: [CommonModule, FormsModule, MatIconModule, MatSelectModule, MatButtonModule, MatCheckboxModule, MatCardModule, MatInputModule,MatListModule,
+  MatGridListModule, MatButtonToggleModule, MatDialogModule],
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.scss',
 })
 export class PortfolioComponent {
-
+ 
   portfolioEntries: PortfolioEntry[] = [];
   viewPortfolioEntries: PortfolioEntry[] = [];
   viewEntries = ViewEntries;
@@ -33,12 +33,22 @@ export class PortfolioComponent {
   viewEntriesOption: boolean = true;
 
   constructor(
-    private portfolioService: PortfolioService, 
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private http: HttpClient
     ) 
   {
-    this.portfolioEntries = this.portfolioService.getPortfolioEntries();
+    this.loadAllEntries();
     this.viewPortfolioEntries = this.portfolioEntries.filter(entry => !entry.hidden);
+  }
+
+  loadAllEntries(){
+    this.http.get<PortfolioEntry[]>('http://localhost:3000/portfolio').subscribe(
+    (data: PortfolioEntry[]) => {
+      this.portfolioEntries = data;
+    },
+    (error) => {
+      console.error('Error fetching portfolio data:', error);
+    });
   }
 
   addEntry(): void {
@@ -50,14 +60,24 @@ export class PortfolioComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.portfolioService.addPortfolioEntry(result.entry);
-        this.viewAllEntries(this.defaultViewEntries);
+        this.http.post('http://localhost:3000/portfolio', result.entry).subscribe(() => {
+          this.loadAllEntries();
+          this.viewAllEntries(this.defaultViewEntries);
+        }, (error) => {
+          console.log(error);
+        });;
       }
-    });
+    }, (error) => {
+      console.log(error);
+    });;
   }
 
   hideEntry(entry: PortfolioEntry) {
-    this.portfolioService.updatePortfolioEntry(entry);
+    this.http.put('http://localhost:3000/portfolio', entry).subscribe(() => {
+      this.viewAllEntries(this.defaultViewEntries);
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   updateEntry(entry: PortfolioEntry){
@@ -69,24 +89,35 @@ export class PortfolioComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.portfolioService.updatePortfolioEntry(result.entry);
+        this.http.put('http://localhost:3000/portfolio', result.entry).subscribe(()=> {
+          this.loadAllEntries();
+        }, (error) => {
+          console.log(error);
+        });
         this.viewAllEntries(this.defaultViewEntries);
       }
     });
   }
 
   deleteEntry(id: number): void {
-    this.portfolioService.deletePortfolioEntry(id);
-    this.viewAllEntries(this.defaultViewEntries);
+    this.http.delete(`http://localhost:3000/portfolio/${id}`).subscribe(() => {
+      this.loadAllEntries();
+      this.viewAllEntries(this.defaultViewEntries);
+    }, (error) => {
+      console.log(error);
+    });
   }
 
   viewAllEntries(value: ViewEntries): void {
-    const allEntries = this.portfolioService.getPortfolioEntries();
-
-    if (value == ViewEntries.Hidden) {
-      this.viewPortfolioEntries = allEntries.filter(entry => entry.hidden);
-      return;
-    }
-    this.viewPortfolioEntries = allEntries.filter(entry => !entry.hidden);
+    this.http.get<PortfolioEntry[]>('http://localhost:3000/portfolio').subscribe((entries: PortfolioEntry[]) => {
+      const allEntries = entries;
+      if (value == ViewEntries.Hidden) {
+        this.viewPortfolioEntries = allEntries.filter((entry: PortfolioEntry) => entry.hidden);
+        return;
+      }
+      this.viewPortfolioEntries = allEntries.filter((entry: PortfolioEntry)  => !entry.hidden);
+    }, (error) => {
+      console.log(error);
+    });
   }
 }

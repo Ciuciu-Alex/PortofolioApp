@@ -24,7 +24,7 @@
             <p matLine>{{ entry.description }}</p>
             <p matLine><a [href]="entry.customerLink" [target]="entry.customerLink">Customer Link <mat-icon>launch</mat-icon></a></p>
             <img class="image-from-list" [src]="entry.image"/>
-            <mat-checkbox color="primary" [checked]="entry.hidden" [(ngModel)]="entry.hidden" (change)="viewAllEntries(defaultViewEntries)">Hide Entry</mat-checkbox>
+            <mat-checkbox color="primary" [checked]="entry.hidden" [(ngModel)]="entry.hidden" (change)="hideEntry(entry)">Hide Entry</mat-checkbox>
             <button mat-raised-button matLine color="primary" (click)="updateEntry(entry)">Edit</button>
             <button mat-raised-button matLine color="warn" (click)="deleteEntry(entry.id)">Delete</button>
           </div>
@@ -49,7 +49,7 @@
           <img mat-card-image [src]="entry.image">
         </mat-card-content>
         <mat-card-actions>
-          <mat-checkbox color="primary" [checked]="entry.hidden" [(ngModel)]="entry.hidden" (change)="viewAllEntries(defaultViewEntries)">Hide Entry</mat-checkbox>
+          <mat-checkbox color="primary" [checked]="entry.hidden" [(ngModel)]="entry.hidden" (change)="hideEntry(entry)">Hide Entry</mat-checkbox>
           <button mat-raised-button color="primary" (click)="updateEntry(entry)">Edit</button>
           <button mat-raised-button color="warn" (click)="deleteEntry(entry.id)">Delete</button>
         </mat-card-actions>
