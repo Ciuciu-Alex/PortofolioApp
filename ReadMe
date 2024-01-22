@@ -3,4 +3,5 @@ To start the aplication run the next command:
 
 1. npm install
 After npm install, if you have errors, please close and open again the application using the code editor
-2. ng serve
+2. open an terminal in the portfolio-backend-api folder and run npm run start
+3. open an terminal in the portfolio-manager folder and run ng serve
